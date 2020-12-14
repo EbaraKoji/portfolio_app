@@ -4,21 +4,21 @@ RSpec.describe "Homes", type: :request do
 
   describe "GET /top" do
     it "returns http success" do
-      get "/home/top"
+      get root_url
       expect(response).to have_http_status(:success)
     end
   end
 
   describe "GET /help" do
     it "returns http success" do
-      get "/home/help"
+      get help_url
       expect(response).to have_http_status(:success)
     end
   end
 
   describe "GET /about" do
     it "returns http success" do
-      get "/home/about"
+      get about_url
       expect(response).to have_http_status(:success)
     end
   end

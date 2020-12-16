@@ -8,7 +8,7 @@ RSpec.describe "Homes", type: :request do
     it "returns http success" do
       get root_url
       expect(response).to have_http_status(:success)
-      assert_select "title", "Top | #{base_title}"
+      assert_select "title", full_title('Top')
     end
   end
 
@@ -16,7 +16,7 @@ RSpec.describe "Homes", type: :request do
     it "returns http success" do
       get help_url
       expect(response).to have_http_status(:success)
-      assert_select "title", "Help | #{base_title}"
+      assert_select "title", full_title('Help')
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.describe "Homes", type: :request do
     it "returns http success" do
       get about_url
       expect(response).to have_http_status(:success)
-      assert_select "title", "About | #{base_title}"
+      assert_select "title", full_title('About')
     end
   end
 

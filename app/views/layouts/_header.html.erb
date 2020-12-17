@@ -2,10 +2,13 @@
 <nav class="nav navbar-nav navbar-left">
   <ul>
     <li><%= link_to "ホーム",   root_path %></li>
-    <li><%= link_to "ログイン", '#' %></li>
-    <li><%= link_to "アカウント", '#' %></li>
+    <% if user_signed_in? %> 
+    <li><%= link_to "プロフィール変更", edit_user_registration_path %></li>
     <li><%= link_to "設定", '#' %></li>
-    <li><%= link_to "ログアウト", '#' %></li>
+    <li><%= link_to "ログアウト", sign_out_path %></li>
+    <% else %>
+    <li><%= link_to "ログイン", new_user_session_path %></li>
+    <% end %>
   </ul>
 </nav>
 </header>

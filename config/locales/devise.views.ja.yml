@@ -25,7 +25,7 @@ ja:
         name: 名前
         email: "メールアドレス"
         password: "パスワード"
-        password_confirmation: "確認用パスワード"
+        password_confirmation: "パスワード(確認用)"
         doesn't match Password: "が一致しません。"
         remember_me: "次回から自動的にログイン"
     models:
@@ -54,7 +54,7 @@ ja:
       edit:
         change_my_password: "パスワードを変更する"
         change_your_password: "パスワードを変更"
-        confirm_new_password: "確認用新しいパスワード"
+        confirm_new_password: "新しいパスワード(確認用)"
         new_password: "新しいパスワード"
       new:
         forgot_your_password: "パスワードを忘れましたか?"

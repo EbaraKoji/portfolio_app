@@ -17,6 +17,8 @@ ja:
               too_long: "は%{count}文字以下に設定して下さい。"
               invalid: "は有効でありません。"
               confirmation: "が内容とあっていません。"
+            password_confirmation:
+              confirmation: "が一致しません。"
     attributes:
       user:
         current_password: "現在のパスワード"
@@ -24,6 +26,7 @@ ja:
         email: "メールアドレス"
         password: "パスワード"
         password_confirmation: "確認用パスワード"
+        doesn't match Password: "が一致しません。"
         remember_me: "次回から自動的にログイン"
     models:
       user: "ユーザ"

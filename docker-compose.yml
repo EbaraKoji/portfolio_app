@@ -19,6 +19,7 @@ services:
     env_file: .env
     depends_on:
       - db
+      - chrome
     ports:
       - '3000:3000'
     volumes:
@@ -26,6 +27,11 @@ services:
       - bundle:/usr/local/bundle:delegated
       - node_modules:/app/node_modules
       - tmp-data:/app/tmp/sockets
+  
+  chrome: 
+    image: selenium/standalone-chrome:latest
+    ports:
+      - 4444:4444
 
 volumes:
   mysql:

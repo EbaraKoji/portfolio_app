@@ -6,8 +6,10 @@ RSpec.describe "DeviseUser", type: :system, js: true do
    user.confirm
   end
   signup_email = "signup@example.com"
+  signup_name = "test user"
   signup_password = "password"
   new_email = "edited@example.com"
+  new_name = "edited user"
   new_pwd = "new_password"
 
   scenario "sign up with valid params" do
@@ -15,6 +17,7 @@ RSpec.describe "DeviseUser", type: :system, js: true do
     visit root_path
     click_on "新規ユーザー登録"
     fill_in   "メールアドレス", with: signup_email
+    fill_in   "ユーザー名", with: signup_name
     fill_in   "パスワード", with: signup_password
     fill_in   "パスワード(確認用)", with: signup_password
     click_button "登録"
@@ -36,6 +39,7 @@ RSpec.describe "DeviseUser", type: :system, js: true do
     visit root_path
     click_on "新規ユーザー登録"
     fill_in   "メールアドレス", with: ""
+    fill_in   "ユーザー名", with: signup_name
     fill_in   "パスワード", with: signup_password
     fill_in   "パスワード(確認用)", with: signup_password
     click_button "登録"
@@ -48,6 +52,7 @@ RSpec.describe "DeviseUser", type: :system, js: true do
     visit root_path
     click_on "新規ユーザー登録"
     fill_in   "メールアドレス", with: signup_email
+    fill_in   "ユーザー名", with: signup_name
     fill_in   "パスワード", with: ""
     fill_in   "パスワード(確認用)", with: ""
     click_button "登録"
@@ -57,12 +62,12 @@ RSpec.describe "DeviseUser", type: :system, js: true do
 
   scenario "get #index" do
     visit users_path
-    expect(page).to have_content "@example.com"
+    expect(page).to have_content "Username"
   end
 
   scenario "get #show" do
     visit user_path user.id
-    expect(page).to have_content "@example.com"
+    expect(page).to have_content user.name
   end
 
   scenario "edit profile" do
@@ -71,6 +76,7 @@ RSpec.describe "DeviseUser", type: :system, js: true do
     sign_in user
     visit edit_user_registration_path user.id
     fill_in   "メールアドレス", with: new_email
+    fill_in   "ユーザー名", with: new_name
     fill_in   "新しいパスワード", with: new_pwd
     fill_in   "新しいパスワード(確認用)", with: new_pwd
     fill_in   "現在のパスワード", with: user.password

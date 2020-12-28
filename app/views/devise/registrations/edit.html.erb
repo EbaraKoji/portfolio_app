@@ -9,8 +9,13 @@
   </div>
 
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+    <div><%= resource.unconfirmed_email %>での本人確認を待機しています。</div>
   <% end %>
+
+  <div class="field">
+    <%= f.label :name, 'ユーザー名' %><br />
+    <%= f.text_field :name, autofocus: true, autocomplete: "name" %>
+  </div>
 
   <div class="field">
     <%= f.label :password, '新しいパスワード' %> <i>(変更しない場合は空欄のままにしてください)</i><br />

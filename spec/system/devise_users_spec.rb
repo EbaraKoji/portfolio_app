@@ -5,27 +5,53 @@ RSpec.describe "DeviseUser", type: :system, js: true do
   before do
    user.confirm
   end
+  signup_email = "signup@example.com"
+  signup_password = "password"
+  new_email = "edited@example.com"
+  new_pwd = "new_password"
+
   scenario "sign up with valid params" do
     ActionMailer::Base.deliveries.clear
     visit root_path
     click_on "新規ユーザー登録"
-    fill_in   "メールアドレス", with: "test1@example.org"
-    fill_in   "パスワード", with: "password"
-    fill_in   "パスワード(確認用)", with: "password"
+    fill_in   "メールアドレス", with: signup_email
+    fill_in   "パスワード", with: signup_password
+    fill_in   "パスワード(確認用)", with: signup_password
     click_button "登録"
     expect(page).to have_content "本人確認用のメールを送信しました"
     expect(ActionMailer::Base.deliveries.size).to eq 1
+    new_user = User.last
+    expect(new_user.email).to eq signup_email
+    expect(new_user.confirmed?).to be_falsy
+
+    #メール認証
+    mail = open_email(signup_email)
+    click_email_link_matching(/^http:/, mail)
+    expect(page).to have_content "メールアドレスが確認できました。"
+    expect(new_user.reload.confirmed?).to be_truthy
   end
 
-  scenario "sign up with invalid params" do
+  scenario "User cannot sign up with invalid email address" do
     ActionMailer::Base.deliveries.clear
     visit root_path
     click_on "新規ユーザー登録"
     fill_in   "メールアドレス", with: ""
-    fill_in   "パスワード", with: "password"
-    fill_in   "パスワード(確認用)", with: "password"
+    fill_in   "パスワード", with: signup_password
+    fill_in   "パスワード(確認用)", with: signup_password
     click_button "登録"
     expect(page).to have_content "メールアドレス が入力されていません"
+    expect(ActionMailer::Base.deliveries.size).to eq 0
+  end
+
+  scenario "User cannot sign up with invalid password" do
+    ActionMailer::Base.deliveries.clear
+    visit root_path
+    click_on "新規ユーザー登録"
+    fill_in   "メールアドレス", with: signup_email
+    fill_in   "パスワード", with: ""
+    fill_in   "パスワード(確認用)", with: ""
+    click_button "登録"
+    expect(page).to have_content "パスワード が入力されていません"
     expect(ActionMailer::Base.deliveries.size).to eq 0
   end
 
@@ -40,31 +66,37 @@ RSpec.describe "DeviseUser", type: :system, js: true do
   end
 
   scenario "edit profile" do
-    def edit_profile(user)
-      visit edit_user_registration_path user.id
-      fill_in   "メールアドレス", with: "edited@example.com"
-      fill_in   "新しいパスワード", with: "new_password"
-      fill_in   "新しいパスワード(確認用)", with: "new_password"
-      fill_in   "現在のパスワード", with: user.password
-      click_button "更新"
-    end
-
+    #メールアドレスとパスワードを変更
     ActionMailer::Base.deliveries.clear
     sign_in user
-    edit_profile(user)
+    visit edit_user_registration_path user.id
+    fill_in   "メールアドレス", with: new_email
+    fill_in   "新しいパスワード", with: new_pwd
+    fill_in   "新しいパスワード(確認用)", with: new_pwd
+    fill_in   "現在のパスワード", with: user.password
+    click_button "更新"
     expect(page).to have_content "アカウント情報を変更しました。変更されたメールアドレスの本人確認のため、本人確認用メールより確認処理をおこなってください。"
-    expect(user.reload.email).to_not eq "edited@example.com"
+    expect(user.reload.email).to_not eq new_email
     expect(ActionMailer::Base.deliveries.size).to eq 1
-    # パスワード変更後は同じパスワードでプロフィール変更はできない
-    ActionMailer::Base.deliveries.clear
-    edit_profile(user)
-    expect(page).to have_content "エラーが発生したため ユーザ は保存されませんでした。"
-    expect(ActionMailer::Base.deliveries.size).to eq 0
+
+    #メール認証
+    mail = open_email(new_email)
+    click_email_link_matching(/^http:/, mail)
+    expect(page).to have_content "メールアドレスが確認できました。"
+    expect(user.reload.email).to eq new_email
+
+    #変更したパスワードで再度ログイン
+    click_on "ログアウト"
+    expect(page).to have_content "新規ユーザー登録"
+    click_on "ログイン"
+    expect(page).to have_content "次回から自動的にログイン"
+    fill_in   "メールアドレス", with: new_email
+    fill_in   "パスワード", with: new_pwd
+    click_button "ログイン"
+    expect(page).to have_content "ログインしました。"
   end
 
   scenario "#reset password" do
-    include EmailSpec::Helpers
-    include EmailSpec::Matchers
     ActionMailer::Base.deliveries.clear
 
     visit new_user_session_path
@@ -77,8 +109,8 @@ RSpec.describe "DeviseUser", type: :system, js: true do
     mail = open_email(user.email)
     click_email_link_matching(/^http:/, mail)
     expect(page).to have_content "パスワードを変更する"
-    fill_in "新しいパスワード", with: "new_password"
-    fill_in "新しいパスワード(確認用)", with: "new_password"
+    fill_in "新しいパスワード", with: new_pwd
+    fill_in "新しいパスワード(確認用)", with: new_pwd
     click_button "変更"
     expect(page).to have_content "パスワードが正しく変更されました。"
   end

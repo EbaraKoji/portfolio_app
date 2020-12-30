@@ -1,4 +1,4 @@
-<p><%= @resource.email %>さん</p>
+<p><%= @resource.name %>さん</p>
 
 <% if @resource.try(:unconfirmed_email?) %>
   <p>登録メールアドレスが<%= @resource.unconfirmed_email %>に変更されました。</p>

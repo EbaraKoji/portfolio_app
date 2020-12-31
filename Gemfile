@@ -40,6 +40,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'rspec-rails', '~> 4.0.0.beta'
   gem 'email_spec'
+  gem 'shoulda-matchers'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

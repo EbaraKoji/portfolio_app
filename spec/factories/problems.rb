@@ -6,12 +6,12 @@ FactoryBot.define do
     updated_at { 1.week.ago }
     association :user
 
-    # trait :latest_problem do
-    #   created_at { Time.now }
-    # end
+    trait :latest do
+      created_at { Time.now }
+    end
 
-    # trait :first_problem do
-    #   created_at { 5.years.ago }
-    # end
+    trait :first do
+      created_at { 5.years.ago }
+    end
   end
 end
